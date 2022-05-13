@@ -1,0 +1,8 @@
+# ignore file for the project
+
+data/
+*.so
+notebooks/
+.vscode/
+plotdump/
+
