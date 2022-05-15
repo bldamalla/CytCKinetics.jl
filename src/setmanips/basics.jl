@@ -12,7 +12,6 @@ kinetics.
 """
 struct AbsorbanceSeries{T<:AbstractFloat}
     ardata::AbsorbanceRaw
-    concentration::T
 
     # information needed for processing
     framestart::T
@@ -20,15 +19,16 @@ struct AbsorbanceSeries{T<:AbstractFloat}
     blanktime::T
 end
 
-struct SeriesSet
+struct SeriesSet{T<:Real}
     series::Vector{AbsorbanceSeries}
+    concentrations::Vector{T}
     menten::Bool
     
     # other metadata contained in the TOML file
     metadata::Dict{String,Any}
 end
 
-struct SeriesSetResults{T<:AbstractFloat}
+struct SeriesSetResults{T<:Real}
     # plotting essentials
     concentrations::Vector{T}
     initrates::Vector{T}
