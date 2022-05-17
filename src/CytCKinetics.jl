@@ -13,5 +13,8 @@ include("manip.jl")
 include("order_fit.jl")
 include("menten_kinetics.jl")
 
+# series set calculations and manipulations
+include("setmanips/basics.jl")
+
 end # module
 
