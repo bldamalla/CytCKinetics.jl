@@ -9,7 +9,7 @@
 using Statistics
 
 export thresholdfit
-export linfit, residuals
+export linfit
 
 function thresholdfit(ar::ARAny, n=length(ar); r2thresh=0.975, minthresh=15)
     f = firstindex(ar)
@@ -35,8 +35,6 @@ function linfit(xs, ys)
     m, b = matxs \ ys
     return m, b
 end
-
-residuals(ys, xs, f::Function) = @. ys - f(xs)
 
 rcoeff(xs, ys) = cov(xs, ys) / std(xs) / std(ys)
 r2(xs, ys) = (rcoeff(xs, ys))^2
