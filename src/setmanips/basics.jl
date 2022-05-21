@@ -1,4 +1,10 @@
-# setmanips/basics.jl -- handling set information
+# By Bon Leif AMALLA (B4, 2022)
+
+# Written for basic activity measurements. In using this initial version, there will
+# be certain restrictions on the format of the input files and their filenames.
+# More details can be found in the README file.
+
+## SERIES SET TYPES AND FITTING
 
 # probably a no op anyway --- just to make sure
 using StaticArrays
@@ -104,12 +110,15 @@ function rateconst(ser::AbsorbanceSeries; r2thresh=0.96, minthresh=20)
 end
 
 """
-    fit(SeriesSetResults, serset::SeriesSet; r2thresh, minthresh)
+    fit(SeriesSetResults, serset::SeriesSet, fitstart; r2thresh, minthresh)
 
 Obtain initial reaction rates and concentrations for plotting. If the
 series set is not admissible for fitting, _i.e._ `serset.menten=false`
 then no fitting will be done. Instead, just rates and concentrations
 will be returned.
+
+Note: `fitstart` is an optional positional argument. This specifies the starting vector
+for fitting with the Michaelis-Menten model.
 """
 function fit(::Type{SeriesSetResults}, serset::SeriesSet,
              fitstart=[60,0.4]; kwargs...)
