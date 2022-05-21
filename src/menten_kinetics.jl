@@ -21,14 +21,38 @@ struct FitResults{T<:AbstractFloat}
     r2::T
 end
 
+"""
+    menten(x, params)
+    menten_inplace(F, x, params)
+
+Michaelis-Menten model function under constant enzyme concentration. The initial
+substrate concentration is `x`. `params` is an iterable with two elements, where the
+first element is ``V_{max}`` and the second element is ``K_M``.
+
+```math
+v_0(x) = \\dfrac{V_{max} \\cdot x}{K_{M} + x}
+```
+
+Note: Usually `params` is a `Vector{T<:Real}` is passed to `LsqFit.curve_fit` 
+during fitting.  Inplace function is provided for fitting when needed.
+
+See also: [`menten_jac`](@ref)
+"""
 menten(s, p) = @. (p[1] * s) / (p[2] + s)
-menten_inplace(F, s, p) = (@. F = (p[1] * s) / (p[2] + s))
+@doc (@doc menten) menten_inplace(F, s, p) = (@. F = (p[1] * s) / (p[2] + s))
 
 """
-    menten_jac
+    menten_jac(x, params)
+    menten_jac_inplace(J, x, params)
 
-Jacobian that can be passed into `LsqFit.curve_fit` for the Michaelis-Menten
-model. This is not the inplace version.
+Jacobian of the Michaelis-Menten model function under constant enzyme concentration. The
+initial substrate concentration is `x`. `params` is an iterable with two elements, where
+the first element is ``V_{max}`` and the second element is ``K_M``.
+
+Note: Usually `params` is a `Vector{T<:Real}` is passed to `LsqFit.curve_fit` 
+during fitting.  Inplace function is provided for fitting when needed.
+
+See also: [`menten`](@ref)
 """
 function menten_jac(s, p)
     J = Matrix{Float64}(undef, length(s), length(p))
@@ -45,14 +69,8 @@ function menten_jac(s::Number, p)
     return @SMatrix [Ja Jb]
 end
 
-"""
-    menten_jac_inplace
-
-Inplace Jacobian that can be passed into `LsqFit.curve_fit` for the Jacobian
-of the Michaelis-Menten model. Remember to pass `inplace=true` when calling
-the function.
-"""
 function menten_jac_inplace(J::Array{Float64, 2}, s, p)
     @. J[:,1] = s / (s + p[2])
     @. @views J[:,2] = -p[1] * J[:,1] / (s + p[2])
 end
+@doc (@doc menten_jac) menten_jac_inplace
