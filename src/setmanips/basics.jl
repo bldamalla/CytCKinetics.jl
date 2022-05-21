@@ -109,6 +109,15 @@ function rateconst(ser::AbsorbanceSeries; r2thresh=0.96, minthresh=20)
     return FitResults(k, N, r2fitted)
 end
 
+function initialrates(serset::SeriesSet; kwargs...)
+    (; series, concentrations) = serset
+    return map(zip(series, concentrations)) do (ser, conc)
+        k = rateconst(ser, kwargs...)
+        return conc * -k.slope * 1000
+    end
+    return initrates
+end
+
 """
     fit(SeriesSetResults, serset::SeriesSet, fitstart; r2thresh, minthresh)
 
@@ -122,11 +131,8 @@ for fitting with the Michaelis-Menten model.
 """
 function fit(::Type{SeriesSetResults}, serset::SeriesSet,
              fitstart=[60,0.4]; kwargs...)
-    (; series, concentrations) = serset
-    initrates = map(zip(series, concentrations)) do (ser, conc)
-        k = rateconst(ser; kwargs...)
-        conc * -k.slope * 1000
-    end
+    (; concentrations) = serset
+    initrates = initialrates(serset; kwargs...)
 
     (; menten) = serset
     menten || return SeriesSetResults(
