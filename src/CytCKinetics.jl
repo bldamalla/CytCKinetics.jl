@@ -16,7 +16,7 @@ include("menten_kinetics.jl")
 # series set calculations and manipulations
 include("setmanips/basics.jl")
 include("setmanips/setmerge.jl")
-# include("setmanips/statistics.jl")
+include("setmanips/statistics.jl")
 
 end # module
 
