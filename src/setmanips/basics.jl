@@ -22,12 +22,17 @@ for kinetics manipulations. Specifically developed for cytochrome c
 kinetics.
 """
 struct AbsorbanceSeries{T<:AbstractFloat}
-    ardata::AbsorbanceRaw
+    ardata::AbsorbanceRaw{T}
 
     # information needed for processing
     framestart::T
     framestop::T
     blanktime::T
+end
+function AbsorbanceSeries(ardata::AbsorbanceRaw{T}, fs,  fst, blank) where T
+    args = fs, fst, blank
+    FTargs = convert.(T, args)
+    return AbsorbanceSeries{T}(ardata, FTargs...)
 end
 
 """
@@ -40,7 +45,7 @@ Note: `menten=true` means series data has to be fit using nonlinear
 least squares regression.
 """
 struct SeriesSet{T<:Real}
-    series::Vector{AbsorbanceSeries}
+    series::Vector{AbsorbanceSeries{T}}
     concentrations::Vector{T}
     menten::Bool
     

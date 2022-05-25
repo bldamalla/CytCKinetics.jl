@@ -22,5 +22,6 @@ const rawdatapath = joinpath(configpath, "WTC")
 const setnames = ["Set1", "Set2"]
 
 include("rawinput.jl")
+include("fitstats.jl")
 
 @test 1+1 == 2
