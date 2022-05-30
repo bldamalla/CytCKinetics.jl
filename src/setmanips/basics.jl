@@ -86,7 +86,7 @@ function blankedframe(ser::AbsorbanceSeries)
     (; blanktime) = ser
     blankidx = time2index(ardata, blanktime)
     
-    return arview - ardata[blankidx]
+    return arview - ardata[blankidx][2]
 end
 
 """
@@ -153,9 +153,9 @@ function fit(::Type{SeriesSetResults}, serset::SeriesSet,
 
     fitmodel.converged || @warn "Fitting did not converge..."
 
-    fitparams = fitmodel.param
-    stderrors = stderror(fitmodel)
-    covmat = estimate_covar(fitmodel)
+    fitparams = fitmodel.param |> SVector{2}
+    stderrors = stderror(fitmodel) |> q->tuple(q...)
+    covmat = estimate_covar(fitmodel) |> SMatrix{2,2}
     return SeriesSetResults(
         concentrations, initrates,
         fitparams, stderrors, covmat
