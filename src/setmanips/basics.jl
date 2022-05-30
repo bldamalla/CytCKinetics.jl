@@ -22,12 +22,17 @@ for kinetics manipulations. Specifically developed for cytochrome c
 kinetics.
 """
 struct AbsorbanceSeries{T<:AbstractFloat}
-    ardata::AbsorbanceRaw
+    ardata::AbsorbanceRaw{T}
 
     # information needed for processing
     framestart::T
     framestop::T
     blanktime::T
+end
+function AbsorbanceSeries(ardata::AbsorbanceRaw{T}, fs,  fst, blank) where T
+    args = fs, fst, blank
+    FTargs = convert.(T, args)
+    return AbsorbanceSeries{T}(ardata, FTargs...)
 end
 
 """
@@ -40,7 +45,7 @@ Note: `menten=true` means series data has to be fit using nonlinear
 least squares regression.
 """
 struct SeriesSet{T<:Real}
-    series::Vector{AbsorbanceSeries}
+    series::Vector{AbsorbanceSeries{T}}
     concentrations::Vector{T}
     menten::Bool
     
@@ -81,7 +86,7 @@ function blankedframe(ser::AbsorbanceSeries)
     (; blanktime) = ser
     blankidx = time2index(ardata, blanktime)
     
-    return arview - ardata[blankidx]
+    return arview - ardata[blankidx][2]
 end
 
 """
@@ -148,9 +153,9 @@ function fit(::Type{SeriesSetResults}, serset::SeriesSet,
 
     fitmodel.converged || @warn "Fitting did not converge..."
 
-    fitparams = fitmodel.param
-    stderrors = stderror(fitmodel)
-    covmat = estimate_covar(fitmodel)
+    fitparams = fitmodel.param |> SVector{2}
+    stderrors = stderror(fitmodel) |> q->tuple(q...)
+    covmat = estimate_covar(fitmodel) |> SMatrix{2,2}
     return SeriesSetResults(
         concentrations, initrates,
         fitparams, stderrors, covmat

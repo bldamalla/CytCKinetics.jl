@@ -19,7 +19,7 @@ rates, at the given initial substrate concentration `x`. Calculated as follows:
 
 where ``J(x, p_0)`` is the Jacobian of the Michaelis-Menten model equation evaluated
 at the given substrate concentration and the fitted parameters from regression. Its
-transpose is the primed term. ``G`(p_0)`` is the covariance matrix calculated by
+transpose is the primed term. ``G(p_0)`` is the covariance matrix calculated by
 `LsqFit`.
 
 Note: `fse` is an alias to `fitstderror`.
