@@ -117,7 +117,9 @@ end
 function initialrates(serset::SeriesSet; kwargs...)
     (; series, concentrations) = serset
     return map(zip(series, concentrations)) do (ser, conc)
-        k = rateconst(ser, kwargs...)
+        r2thresh = get(kwargs, :r2thresh, 0.95)
+        minthresh = get(kwargs, :minthresh, 15)
+        k = rateconst(ser, r2thresh=r2thresh, minthresh=minthresh)
         return conc * -k.slope * 1000
     end
     return initrates
