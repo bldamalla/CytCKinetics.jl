@@ -17,6 +17,7 @@ include("menten_kinetics.jl")
 include("setmanips/basics.jl")
 # include("setmanips/setmerge.jl")
 include("setmanips/statistics.jl")
+include("setmanips/printing.jl")
 
 end # module
 
