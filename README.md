@@ -48,21 +48,19 @@ blanked = viewdata - blankvalue             # subtract the value from the entire
                                             # creating a new ARManip
 ```
 
+The package, as of writing, supports "series set analyses" wherein reaction rates are
+calculated from a set of time series absorbance measurements and fit against corresponding
+starting substrate concentrations. Plans are to include "set group analyses" for cleaner
+statistical treatment not limited to parameter confidence ellipsoids and hypothesis tests.
+
 ## Scripts usage
 
-As of writing, scripts are tested to work against a computer running
-on MacOS. The primary author also has a Windows machine for lab
-related work and scripts are also being tested against that machine. So far, all
-scripts work the same way (as expected, since Julia can be run cross-platform).
-Useful scripts that utilize functions within the module are contained in the
-`scripts/` folder.
+So far, there are three Julia files in the `scripts/` folder. Their purposes are described
+in the folder README. These files are edited depending on the data to be analyzed. Files
+are run using VSCode, either in REPL mode or as a process
 
-So far, plans are to include two flavors of analyses:
-1. Series set analyses; and
-2. Set group analyses.
-Set group analyses are the same as series set analyses, but with clearer statistical
-treatment. The differences and actions of the scripts will be explained in the README within
-the folder.
+If there is enough motivation to do so, they may be edited in future version in ways that
+allow them to accept command line arguments for flexibility.
 
 ## Questions and contact
 
