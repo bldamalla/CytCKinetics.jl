@@ -34,9 +34,9 @@ function deserialize(::Type{SeriesSetResults}, dict)
     concentrations = dict["concentrations"]
     initrates = dict["initrates"]
 
-    fitparams = isnan(dict["fitparams"]) ? nothing : SVector{2}(dict["fitparams"])
-    stderrors = isnan(dict["stderrors"]) ? nothing : tuple(dict["stderrors"]...)
-    covmatrix = isnan(dict["covmatrix"]) ? nothing : SMatrix{2,2}(dict["covmatrix"])
+    fitparams = dict["fitparams"] === NaN ? nothing : SVector{2}(dict["fitparams"])
+    stderrors = dict["stderrors"] === NaN ? nothing : tuple(dict["stderrors"]...)
+    covmatrix = dict["covmatrix"] === NaN ? nothing : SMatrix{2,2}(dict["covmatrix"])
 
     return SeriesSetResults(concentrations, initrates, fitparams, stderrors, covmatrix)
 end
