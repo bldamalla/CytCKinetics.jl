@@ -24,10 +24,22 @@ transpose is the primed term. ``G(p_0)`` is the covariance matrix calculated by
 
 Note: `fse` is an alias to `fitstderror`.
 """
-function fitstderror(s::Number, ssr)
-    ∇ = menten_jac(s, ssr.fitparams)
-    variance = transpose(∇) * ssr.covmatrix * ∇
+function fitstderror(s::Number, fitresult)
+    ∇ = menten_jac(s, fitresult.fitparams)
+    variance = transpose(∇) * fitresult.covmatrix * ∇
     return sqrt(variance)
 end
 const fse = fitstderror
 @doc (@doc fitstderror) fse
+
+"""
+    fitssr(xvalues, yvalues, fitparams)
+
+Calculates the residual sum of squares by fitting ``y`` values with ``x`` values
+using the Michaelis-Menten model with fitting parameters given by `fitparams`.
+
+Mostly used for defining the confidence region for the fitting parameters.
+"""
+function fitssr(xvalues, yvalues, fitparams)
+    return sum(x->x^2, yvalues .- menten(xvalues, fitparams))
+end
