@@ -54,11 +54,11 @@ function fit(::Type{SetGroupResults}, setgrp::SetGroup,
                          concentrations, initrates, fitstart;
                          inplace=true)
 
-    fitmodel.converge || @warn "Fitting did not converge..."
+    fitmodel.converged || @warn "Fitting did not converge..."
 
-    fitparams = fitmodel.param
-    stderrors = stderror(fitmodel)
-    covmat = estimate_covar(fitmodel)
+    fitparams = fitmodel.param |> SVector{2}
+    stderrors = stderror(fitmodel) |> q->tuple(q...)
+    covmat = estimate_covar(fitmodel) |> SMatrix{2,2}
 
     return SetGroupResults(
         concentrations, initrates,

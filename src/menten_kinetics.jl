@@ -66,7 +66,7 @@ function menten_jac(s::Number, p)
     ## do the jacobian stuff here
     Ja = s / (s + p[2])
     Jb = -p[1] * Ja / (s + p[2])
-    return @SMatrix [Ja Jb]
+    return @SVector [Ja, Jb]
 end
 
 function menten_jac_inplace(J::Array{Float64, 2}, s, p)

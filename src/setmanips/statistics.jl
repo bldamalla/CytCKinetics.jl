@@ -24,9 +24,9 @@ transpose is the primed term. ``G(p_0)`` is the covariance matrix calculated by
 
 Note: `fse` is an alias to `fitstderror`.
 """
-function fitstderror(ssr, s::Number)
+function fitstderror(s::Number, ssr)
     ∇ = menten_jac(s, ssr.fitparams)
-    variance = ∇ * ssr.covmatrix * transpose(∇)
+    variance = transpose(∇) * ssr.covmatrix * ∇
     return sqrt(variance)
 end
 const fse = fitstderror
