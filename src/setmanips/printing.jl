@@ -40,3 +40,27 @@ function deserialize(::Type{SeriesSetResults}, dict)
 
     return SeriesSetResults(concentrations, initrates, fitparams, stderrors, covmatrix)
 end
+
+function serialize(object::SetGroupResults)
+    retdict = Dict{String,Any}()
+
+    retdict["concentrations"] = object.concentrations
+    retdict["initrates"] = object.initrates
+
+    retdict["fitparams"] = object.fitparams |> vec
+    retdict["stderrors"] = [object.stderrors...]
+    retdict["covmatrix"] = object.covmatrix |> vec
+
+    return retdict
+end
+
+function deserialize(::Type{SetGroupResults}, dict)
+    concentrations = dict["concentrations"]
+    initrates = dict["initrates"]
+
+    fitparams = dict["fitparams"] |> SVector{2}
+    stderrors = tuple(dict["stderrors"]...)
+    covmatrix = dict["covmatrix"] |> SMatrix{2,2}
+    
+    return SetGroupResults(concentrations, initrates, fitparams, stderrors, covmatrix)
+end

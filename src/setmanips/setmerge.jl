@@ -44,11 +44,11 @@ Note: `fitstart` is an optional position argument. This specifies the starting v
 for fitting with the Michaelis-Menten model. Internally uses the inplace functions.
 """
 function fit(::Type{SetGroupResults}, setgrp::SetGroup,
-             fitstart=[60,0.4], kwargs...)
+             fitstart=[60,0.4]; kwargs...)
     # appropriately merge the concentrations...
     concentrations = reduce(vcat, (ser.concentrations for ser in setgrp.sets))
     # ... and initial reaction rates
-    initrates = reduce(vcat, (initialrates(ser) for ser in setgrp.sets))
+    initrates = reduce(vcat, (initialrates(ser; kwargs...) for ser in setgrp.sets))
 
     fitmodel = curve_fit(menten_inplace, menten_jac_inplace,
                          concentrations, initrates, fitstart;
