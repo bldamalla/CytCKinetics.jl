@@ -19,7 +19,9 @@ function thresholdfit(ar::ARAny, n=length(ar); r2thresh=0.975, minthresh=15)
     curr_r2 = r2(ts, abs)
     n <= minthresh && return minthresh, begin
         ts, abs = @inbounds ar.times[f:f-1+minthresh], ar.values[f:f-1+minthresh]
-        r2(ts, abs)
+        lastr2 = r2(ts, abs)
+        lastr2 < r2thresh && @warn "R² threshold (r2thresh) not reached at $lastr2"
+        lastr2
     end
     curr_r2 > r2thresh && return n, curr_r2
 

@@ -101,7 +101,7 @@ in absorbance value.
 Note: Also returns the number of points used in fitting and the
 coefficient of deterination ``r^2`` from fitting.
 """
-function rateconst(ser::AbsorbanceSeries; r2thresh=0.96, minthresh=20)
+function rateconst(ser::AbsorbanceSeries; r2thresh, minthresh)
     logAbs = blankedframe(ser) |> log
 
     # find appropriate N and r2 for linear fitting
@@ -117,8 +117,8 @@ end
 function initialrates(serset::SeriesSet; kwargs...)
     (; series, concentrations) = serset
     return map(zip(series, concentrations)) do (ser, conc)
-        r2thresh = get(kwargs, :r2thresh, 0.95)
-        minthresh = get(kwargs, :minthresh, 15)
+        r2thresh = get(kwargs, :r2thresh, 0.96)
+        minthresh = get(kwargs, :minthresh, 20)
         k = rateconst(ser, r2thresh=r2thresh, minthresh=minthresh)
         return conc * -k.slope * 1000
     end
