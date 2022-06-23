@@ -20,13 +20,14 @@ function thresholdfit(ar::ARAny, n=length(ar); r2thresh=0.975, minthresh=15)
     n <= minthresh && return minthresh, begin
         ts, abs = @inbounds ar.times[f:f-1+minthresh], ar.values[f:f-1+minthresh]
         lastr2 = r2(ts, abs)
-        lastr2 < r2thresh && @warn "R² threshold (r2thresh) not reached at $lastr2"
+        @info "$minthresh"
+        lastr2 < r2thresh && @warn "R² threshold ($r2thresh) not reached at $lastr2"
         lastr2
     end
     curr_r2 > r2thresh && return n, curr_r2
 
     # recalculate bounds for line calculation
-    thresholdfit(ar, div(n, 8)*7; r2thresh=r2thresh)
+    thresholdfit(ar, div(n, 8)*7; r2thresh=r2thresh, minthresh=minthresh)
 end
 
 function linfit(xs, ys)
