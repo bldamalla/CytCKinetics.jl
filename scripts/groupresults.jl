@@ -8,7 +8,7 @@ import TOML
 using CytCKinetics
 
 const dataloc = joinpath(@__DIR__, "..", "data")
-arglist = ["WTC:GroupA"]
+arglist = ["WTC:GroupB"]
 split_arg(arg) = split(arg, ':') .|> string
 function getsetmeta(strain, set)
     metaall = open(joinpath(dataloc, "$strain.toml")) do io
@@ -64,7 +64,7 @@ setgroups = map(groupsets) do (strain, members)
 end
 
 # now fit the merged sets
-fitresults = fit.(SetGroupResults, setgroups, r2thresh=0.97, minthresh=20)
+fitresults = fit.(SetGroupResults, setgroups, r2thresh=0.95, minthresh=40)
 @info "Fitted calculations..."
 
 # serialize into the results toml

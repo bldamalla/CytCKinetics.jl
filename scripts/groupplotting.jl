@@ -6,7 +6,7 @@ import CytCKinetics, Distributions
 import TOML
 
 # get the groups you are interested in
-arglist = ["WTC:GroupA"]
+arglist = ["WTC:GroupA", "WTC:GroupB"]
 split_arg(arg) = split(arg, ':') .|> string
 
 const resultsmetaloc = joinpath(@__DIR__, "..", "data", "results.toml")
