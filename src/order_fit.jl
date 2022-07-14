@@ -39,6 +39,17 @@ function linfit(xs, ys)
     return m, b
 end
 
+function weightedlinfit(xs, ys, wt=ones(length(xs)))
+    @assert length(xs) == length(ys) "data to be fit must have the same length"
+    l = length(xs)
+
+    Xt = hcat(xs, ones(l)) |> transpose
+    cinv_x = hcat(wt .* xs, wt)
+    cinv_y = wt .* ys
+
+    return inv(Xt * cinv_x) * Xt * cinv_y
+end
+
 rcoeff(xs, ys) = cov(xs, ys) / std(xs) / std(ys)
 r2(xs, ys) = (rcoeff(xs, ys))^2
 

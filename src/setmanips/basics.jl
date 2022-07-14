@@ -101,25 +101,38 @@ in absorbance value.
 Note: Also returns the number of points used in fitting and the
 coefficient of deterination ``r^2`` from fitting.
 """
-function rateconst(ser::AbsorbanceSeries; r2thresh, minthresh)
+function rateconst(ser::AbsorbanceSeries; kwargs...)
     logAbs = blankedframe(ser) |> log
 
-    # find appropriate N and r2 for linear fitting
-    # based on needed linearity parameters
-    N, r2fitted = thresholdfit(logAbs; r2thresh=r2thresh, minthresh=minthresh)
+    method = get(kwargs, :method, :thresh)
 
-    # actual linear fitting
-    k, _ = linfit(logAbs.times[1:N], logAbs.values[1:N])
+    if method === :thresh
+        # find appropriate N and r2 for linear fitting
+        # based on needed linearity parameters
+        r2thresh = get(kwargs, :r2thresh, 0.96)
+        minthresh = get(kwargs, :minthresh, 20)
 
-    return FitResults(k, N, r2fitted)
+        N, r2fitted = thresholdfit(logAbs; r2thresh=r2thresh, minthresh=minthresh)
+
+        # actual linear fitting
+        k, _ = linfit(logAbs.times[1:N], logAbs.values[1:N])
+
+        return FitResults(k, N, r2fitted)
+    elseif method === :full
+        # use the whole series and set up weighted linear regression
+        weights = map(logAbs.times) do t 1/t^2 end
+        k, _ = weightedlinfit(logAbs.times, logAbs.values, weights)
+
+        return FitResults(k, length(logAbs), r2(logAbs.times, logAbs.values))
+    else
+        error("Invalid method. Choose between `:full` and `:thresh`(default)")
+    end
 end
 
 function initialrates(serset::SeriesSet; kwargs...)
     (; series, concentrations) = serset
     return map(zip(series, concentrations)) do (ser, conc)
-        r2thresh = get(kwargs, :r2thresh, 0.96)
-        minthresh = get(kwargs, :minthresh, 20)
-        k = rateconst(ser, r2thresh=r2thresh, minthresh=minthresh)
+        k = rateconst(ser; kwargs...)
         return conc * -k.slope * 1000
     end
     return initrates
