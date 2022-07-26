@@ -1,7 +1,7 @@
 name = "CytCKinetics"
 uuid = "844ea881-fdcc-4f24-a569-0e4128ce74b0"
 authors = ["Bon Leif Amalla <bonleifamalla@gmail.com>"]
-version = "0.2.0"
+version = "0.3.0"
 
 [deps]
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
