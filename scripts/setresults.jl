@@ -7,7 +7,7 @@ import TOML
 
 const dataloc = joinpath(@__DIR__, "..", "data")
 
-arglist = ["WTC:Set3", "WTC:Set4"]
+arglist = ["WTC:Set7", "WTC:Set8"]
 split_arg(arg) = split(arg, ':') .|> string
 function getsetmeta(strain, set)
     metaall = open(joinpath(dataloc, "$strain.toml")) do io
@@ -54,7 +54,7 @@ seriessets = map(metadata) do setmeta
 end
 
 # fit results using the internal fit in CytCKinetics
-fitresults = fit.(SeriesSetResults, seriessets; method=:full)
+fitresults = fit.(SeriesSetResults, seriessets; method=:thresh, r2thresh=0.95, minthresh=40)
 @info "Finished calculations..."
 
 # serialize into the results toml

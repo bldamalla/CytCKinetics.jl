@@ -53,3 +53,20 @@ end
 rcoeff(xs, ys) = cov(xs, ys) / std(xs) / std(ys)
 r2(xs, ys) = (rcoeff(xs, ys))^2
 
+## nonlinear fitting for finding rate constant from exponential model
+
+function expfit(xs, ys, st=[2.0,0.4])
+    mdl = curve_fit(exp1°, jac_exp1°, xs, ys, st; inplace=true)
+
+    mdl.converged || @warn "Exponential fitting did not converge..."
+
+    return mdl.param    # this returns a vector (2-element) of the fit params
+end
+
+# inplace exponential model
+exp1°(F, t, p) = @.(F = p[1] * exp(-t * p[2]))
+function jac_exp1°(J::Array{Float64,2}, t, p) # inplace jacobian
+    @. J[:,1] = exp(-p[2] * t)
+    @. @views J[:,2] = -p[1] * t * J[:,1]
+end
+

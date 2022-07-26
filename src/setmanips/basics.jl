@@ -102,13 +102,14 @@ Note: Also returns the number of points used in fitting and the
 coefficient of deterination ``r^2`` from fitting.
 """
 function rateconst(ser::AbsorbanceSeries; kwargs...)
-    logAbs = blankedframe(ser) |> log
+    blanked = blankedframe(ser)
 
     method = get(kwargs, :method, :thresh)
 
     if method === :thresh
         # find appropriate N and r2 for linear fitting
         # based on needed linearity parameters
+        logAbs = blanked |> log
         r2thresh = get(kwargs, :r2thresh, 0.96)
         minthresh = get(kwargs, :minthresh, 20)
 
@@ -120,10 +121,17 @@ function rateconst(ser::AbsorbanceSeries; kwargs...)
         return FitResults(k, N, r2fitted)
     elseif method === :full
         # use the whole series and set up weighted linear regression
+        logAbs = blanked |> log
         weights = map(logAbs.times) do t 1/t^2 end
         k, _ = weightedlinfit(logAbs.times, logAbs.values, weights)
 
         return FitResults(k, length(logAbs), r2(logAbs.times, logAbs.values))
+    elseif method === :exp
+        # use exp form of integrated rate law (nonlinear fitting)
+        zero_times = blanked.times .- minimum(blanked.times) .+ 1
+        _, k = expfit(zero_times, blanked.values)
+
+        return FitResults(-k, length(blanked), 0.98) # fix this soon
     else
         error("Invalid method. Choose between `:full` and `:thresh`(default)")
     end

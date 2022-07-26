@@ -8,7 +8,7 @@ import TOML
 # read the results file
 
 # get the sets you are interested in
-arglist = ["WTC:Set3", "WTC:Set4"]
+arglist = ["WTC:Set7", "WTC:Set8"]
 split_arg(arg) = split(arg, ':') .|> string
 
 const resultsmetaloc = joinpath(@__DIR__, "..", "data/results.toml")
@@ -54,7 +54,7 @@ for (i, (name, result)) in paired |> enumerate
         q = Distributions.quantile(Distributions.TDist(dofN), 1-α/2)
         σ_fse = map(xvalues) do x CytCKinetics.fitstderror(x, result) * q end
 
-        band!(ax, xvalues, yvalues .- σ_fse, yvalues .+ σ_fse; color=(gcolor, 0.5))
+        # band!(ax, xvalues, yvalues .- σ_fse, yvalues .+ σ_fse; color=(gcolor, 0.5))
     end
 end
 
