@@ -54,7 +54,7 @@ seriessets = map(metadata) do setmeta
 end
 
 # fit results using the internal fit in CytCKinetics
-fitresults = fit.(SeriesSetResults, seriessets; method=:thresh, r2thresh=0.95, minthresh=40)
+fitresults = fit.(SeriesSetResults, seriessets; method=:exp, offset=1.6)
 @info "Finished calculations..."
 
 # serialize into the results toml

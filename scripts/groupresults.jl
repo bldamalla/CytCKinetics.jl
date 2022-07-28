@@ -64,7 +64,7 @@ setgroups = map(groupsets) do (strain, members)
 end
 
 # now fit the merged sets
-fitresults = fit.(SetGroupResults, setgroups; method=:thresh, r2thresh=0.95, minthresh=40)
+fitresults = fit.(SetGroupResults, setgroups; method=:exp, offset=1.6)
 @info "Fitted calculations..."
 
 # serialize into the results toml
