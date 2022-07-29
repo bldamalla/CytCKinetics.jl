@@ -143,7 +143,6 @@ function initialrates(serset::SeriesSet; kwargs...)
         k = rateconst(ser; kwargs...)
         return conc * -k.slope * 1000
     end
-    return initrates
 end
 
 """
