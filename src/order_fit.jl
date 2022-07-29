@@ -60,7 +60,7 @@ function expfit(xs, ys, st=[2.0,0.4])
 
     mdl.converged || @warn "Exponential fitting did not converge..."
 
-    return mdl.param    # this returns a vector (2-element) of the fit params
+    return mdl  # so you can properly calculate r2 later on
 end
 
 # inplace exponential model

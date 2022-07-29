@@ -128,10 +128,21 @@ function rateconst(ser::AbsorbanceSeries; kwargs...)
         return FitResults(k, length(logAbs), r2(logAbs.times, logAbs.values))
     elseif method === :exp
         # use exp form of integrated rate law (nonlinear fitting)
-        zero_times = blanked.times .- minimum(blanked.times) .+ 1
-        _, k = expfit(zero_times, blanked.values)
+        offset = get(kwargs, :offset, 1)
 
-        return FitResults(-k, length(blanked), 0.98) # fix this soon
+        zero_times = blanked.times .- minimum(blanked.times) .+ offset
+        fitmodel = expfit(zero_times, blanked.values)
+        k = fitmodel.param[2]
+
+        mval = mean(blanked.values)
+        sst = sum(blanked.values) do val
+            abs2(val - mval)
+        end
+        ssr = sum(abs2, fitmodel.resid)
+        R2 = 1 - (ssr/sst)
+        R2 >= 0.96 || @warn "R² value less than 0.96 at $R2"
+
+        return FitResults(-k, length(blanked), R2)
     else
         error("Invalid method. Choose between `:full` and `:thresh`(default)")
     end
