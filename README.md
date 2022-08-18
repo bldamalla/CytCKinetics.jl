@@ -1,21 +1,24 @@
 # CytCKinetics
 
-A small Julia project containing utility functions for reading and
-calculation of kinetics related constants. This package was
-specifically made for research use.
+A small Julia project containing utility functions for reading and calculation of kinetics related
+constants. This package was specifically made for research use.
 
-Data used for testing can be provided upon request.
-
-The package is a bare minimum of functional types that were thought
-to make analyses easier to express. These will be expected to change
-in the near future once tests on further data are possible.
-Other functionality may also be added.
+The package is a bare minimum of functional types that were thought to make analyses easier to
+express. These will be expected to change in the near future once tests on further data are
+possible. Other functionality may also be added.
 
 Existing functionality include:
 - Reading specific output format from a Hitachi UV-Vis spectrometer
 - Utility types for handling absorbance data (including views and manipulated types)
 - Simple data manipulations by extending methods from `Base`, to the whole data (like vectorized functions)
 - Predefined model functions and Jacobians for Michaelis-Menten analyses using `LsqFit`
+- Built-in methods for nonlinear fitting
+
+Extending from these is not very difficult. A notebook/docs repository will be provided to show how
+these extensions and analyses are done. They include:
+- Checking reaction order
+- Calculation of confidence intervals and hypothesis testing
+- Extraction of some reaction steady-state properties
 
 ## Package usage
 
@@ -48,23 +51,32 @@ blanked = viewdata - blankvalue             # subtract the value from the entire
                                             # creating a new ARManip
 ```
 
-The package, as of writing, supports "series set analyses" wherein reaction rates are
-calculated from a set of time series absorbance measurements and fit against corresponding
-starting substrate concentrations. Plans are to include "set group analyses" for cleaner
-statistical treatment not limited to parameter confidence ellipsoids and hypothesis tests.
+### Kinetic assay setup
 
-## Scripts usage
+Kinetic assays done in the lab usually use a fixed amount of enzyme while varying the initial
+substrate concentration. The decay of absorbance at a certain wavelength is monitored and served as
+a stand-in for the remaining substrate concentration. One assay uses a _set_ of initial substrate
+concentrations; the absorbance time series of the measurements form a **series set**.
 
-So far, there are three Julia files in the `scripts/` folder. Their purposes are described
-in the folder README. These files are edited depending on the data to be analyzed. Files
-are run using VSCode, either in REPL mode or as a process
+Michaelis--Menten kinetic parameters can be obtained from series sets. Series sets using the same
+protein samples (done on the same day) can be combined to from **set groups** to get more degrees of
+freedom (points). This _can_ give narrower confidence intervals for kinetic parameters.
 
-If there is enough motivation to do so, they may be edited in future version in ways that
-allow them to accept command line arguments for flexibility.
+Two modes of analyses coming from these points of view can be made and are handled interestingly
+(yet still quite sloppily) by the package.
+
+## Examples in notebooks and documentation
+
+Using script files used for actual data analysis as examples for package has been discontinued. This
+may increase the size of commits a lot. Instead, a **separate** repository containing both notebooks
+and actual data used for analysis will be made far into the future. As the repo will have data
+I have obtained from experiments, it will use a different license from the one this repo uses.
+
+Included with the notebooks is the documentation on how to use the package. Docstrings are already
+being slowly added into the important constructs, so it will be easy to access them using the `help`
+prompt in REPL. LSP implementations are also smart enough to cover these.
 
 ## Questions and contact
 
-Send an email (see `Project.toml`) for questions regarding use or just
-about anything.
-A documentation will be in progress once initial details are fleshed
-out likely after the first semester (August 2022).
+Send an email (see `Project.toml`) for questions regarding use or just about anything.
+
