@@ -5,9 +5,9 @@ constants. This package was specifically made for research use.
 
 The package is a bare minimum of functional types that were thought to make analyses easier to
 express. These will be expected to change in the near future once tests on further data are
-possible. Other functionality may also be added.
+possible. Other capabilities may also be added.
 
-Existing functionality include:
+Existing capabilities include:
 - Reading specific output format from a Hitachi UV-Vis spectrometer
 - Utility types for handling absorbance data (including views and manipulated types)
 - Simple data manipulations by extending methods from `Base`, to the whole data (like vectorized functions)
@@ -69,7 +69,7 @@ Two modes of analyses coming from these points of view can be made and are handl
 
 Using script files used for actual data analysis as examples for package has been discontinued. This
 may increase the size of commits a lot. Instead, a **separate** repository containing both notebooks
-and actual data used for analysis will be made far into the future. As the repo will have data
+and actual data used for analysis will be made not far into the future. As the repo will have data
 I have obtained from experiments, it will use a different license from the one this repo uses.
 
 Included with the notebooks is the documentation on how to use the package. Docstrings are already
