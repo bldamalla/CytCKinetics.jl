@@ -90,7 +90,7 @@ function blankedframe(ser::AbsorbanceSeries)
 end
 
 """
-    rateconst(ser::AbsorbanceSeries; r2thresh, minthresh)
+    rateconst(ser::AbsorbanceSeries; kwargs...)
 
 Simplified routine to calculate initial rate constant for cytochrome
 _c_ oxidation, almost specifically (purpose of the module, really).
@@ -100,6 +100,17 @@ in absorbance value.
 
 Note: Also returns the number of points used in fitting and the
 coefficient of deterination ``r^2`` from fitting.
+
+# Keyword arguments
+Keyword arguments control how the first-order rate constant is
+calculated. Three methods are implemented. For more details, a section in
+the manual.
++ Linear fitting of the logarithm of absorbance against time (`method=:thresh`)
+    + Additional keyword `r2thresh=0.96`
+    + Additional keyword `minthresh=20`
++ Weighted linear fitting of the above (`method=:full`)
++ Nonlinear fitting of absorbance against time (`method=:exp`)
+    + Additional keyword `offset=1`
 """
 function rateconst(ser::AbsorbanceSeries; kwargs...)
     blanked = blankedframe(ser)
@@ -157,7 +168,7 @@ function initialrates(serset::SeriesSet; kwargs...)
 end
 
 """
-    fit(SeriesSetResults, serset::SeriesSet, fitstart; r2thresh, minthresh)
+    fit(SeriesSetResults, serset::SeriesSet, fitstart; kwargs...)
 
 Obtain initial reaction rates and concentrations for plotting. If the
 series set is not admissible for fitting, _i.e._ `serset.menten=false`
@@ -165,7 +176,8 @@ then no fitting will be done. Instead, just rates and concentrations
 will be returned.
 
 Note: `fitstart` is an optional positional argument. This specifies the starting vector
-for fitting with the Michaelis-Menten model.
+for fitting with the Michaelis-Menten model. See [`CytCKinetics.rateconst`](@ref) for
+more information on `kwargs`.
 """
 function fit(::Type{SeriesSetResults}, serset::SeriesSet,
              fitstart=[60,0.4]; kwargs...)
